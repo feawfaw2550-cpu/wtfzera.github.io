@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Winterfell Zera</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0f1c24;
+      color: #ffffff;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 15px auto;
+      width: 100px;
+      height: auto;
+    }
+
+    .search-box {
+      background-color: #1e2c36;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      outline: none;
+      background-color: #0f1c24;
+      color: white;
+    }
+
+    .member {
+      background-color: #1e2c36;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s ease;
+    }
+
+    .member:hover {
+      background-color: #273b48;
+    }
+
+    .member-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .profile-img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #444;
+    }
+
+    .member-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .member-name {
+      font-weight: bold;
+    }
+
+    .facebook-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .facebook-link img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      gap: 15px;
+    }
+
+    .pagination button {
+      background-color: #1e2c36;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="zera1.jpg" alt="Logo" class="logo" />
+    <h1>Winterfell Zera</h1>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="ค้นหาชื่อสมาชิก..." onkeyup="filterMembers()" />
+    </div>
+
+    <div id="memberList"></div>
+
+    <div class="pagination">
+      <button id="prevBtn" onclick="prevPage()">ก่อนหน้า</button>
+      <span id="pageInfo"></span>
+      <button id="nextBtn" onclick="nextPage()">ถัดไป</button>
+    </div>
+  </div>
+
+  <script>
+    // สร้างสมาชิก 50 คน
+    const members = [
+      { name: "Quint Winterfell", fb: "https://www.facebook.com/frequent.smp", img: "zera1.jpg" },
+      { name: "Arya Stark", fb: "https://facebook.com/member2", img: "zera1.jpg" },
+      { name: "Jon Snow", fb: "https://facebook.com/member3", img: "zera1.jpg" },
+      { name: "Sansa Stark", fb: "https://facebook.com/member4", img: "zera1.jpg" },
+      { name: "Bran Stark", fb: "https://facebook.com/member5", img: "zera1.jpg" },
+      { name: "Tyrion Lannister", fb: "https://facebook.com/member6", img: "zera1.jpg" },
+      { name: "Cersei Lannister", fb: "https://facebook.com/member7", img: "zera1.jpg" },
+      { name: "Jaime Lannister", fb: "https://facebook.com/member8", img: "zera1.jpg" },
+      { name: "Daenerys Targaryen", fb: "https://facebook.com/member9", img: "zera1.jpg" },
+      { name: "Khal Drogo", fb: "https://facebook.com/member10", img: "zera1.jpg" },
+
+      { name: "Samwell Tarly", fb: "https://facebook.com/member11", img: "zera1.jpg" },
+      { name: "Gilly Tarly", fb: "https://facebook.com/member12", img: "zera1.jpg" },
+      { name: "Brienne of Tarth", fb: "https://facebook.com/member13", img: "zera1.jpg" },
+      { name: "Podrick Payne", fb: "https://facebook.com/member14", img: "zera1.jpg" },
+      { name: "Jorah Mormont", fb: "https://facebook.com/member15", img: "zera1.jpg" },
+      { name: "Missandei", fb: "https://facebook.com/member16", img: "zera1.jpg" },
+      { name: "Varys", fb: "https://facebook.com/member17", img: "zera1.jpg" },
+      { name: "Petyr Baelish", fb: "https://facebook.com/member18", img: "zera1.jpg" },
+      { name: "Sandor Clegane", fb: "https://facebook.com/member19", img: "zera1.jpg" },
+      { name: "Gregor Clegane", fb: "https://facebook.com/member20", img: "zera1.jpg" },
+
+      { name: "Margaery Tyrell", fb: "https://facebook.com/member21", img: "zera1.jpg" },
+      { name: "Olenna Tyrell", fb: "https://facebook.com/member22", img: "zera1.jpg" },
+      { name: "Stannis Baratheon", fb: "https://facebook.com/member23", img: "zera1.jpg" },
+      { name: "Melisandre", fb: "https://facebook.com/member24", img: "zera1.jpg" },
+      { name: "Davos Seaworth", fb: "https://facebook.com/member25", img: "zera1.jpg" },
+      { name: "Robert Baratheon", fb: "https://facebook.com/member26", img: "zera1.jpg" },
+      { name: "Renly Baratheon", fb: "https://facebook.com/member27", img: "zera1.jpg" },
+      { name: "Loras Tyrell", fb: "https://facebook.com/member28", img: "zera1.jpg" },
+      { name: "Shae", fb: "https://facebook.com/member29", img: "zera1.jpg" },
+      { name: "Ygritte", fb: "https://facebook.com/member30", img: "zera1.jpg" },
+
+      { name: "Tormund Giantsbane", fb: "https://facebook.com/member31", img: "zera1.jpg" },
+      { name: "Jaqen H'ghar", fb: "https://facebook.com/member32", img: "zera1.jpg" },
+      { name: "The Hound", fb: "https://facebook.com/member33", img: "zera1.jpg" },
+      { name: "The Mountain", fb: "https://facebook.com/member34", img: "zera1.jpg" },
+      { name: "Eddard Stark", fb: "https://facebook.com/member35", img: "zera1.jpg" },
+      { name: "Catelyn Stark", fb: "https://facebook.com/member36", img: "zera1.jpg" },
+      { name: "Talisa Maegyr", fb: "https://facebook.com/member37", img: "zera1.jpg" },
+      { name: "Robb Stark", fb: "https://facebook.com/member38", img: "zera1.jpg" },
+      { name: "Hodor", fb: "https://facebook.com/member39", img: "zera1.jpg" },
+      { name: "Littlefinger", fb: "https://facebook.com/member40", img: "zera1.jpg" },
+
+      { name: "Bronn", fb: "https://facebook.com/member41", img: "zera1.jpg" },
+      { name: "Daario Naharis", fb: "https://facebook.com/member42", img: "zera1.jpg" },
+      { name: "Grey Worm", fb: "https://facebook.com/member43", img: "zera1.jpg" },
+      { name: "Tommen Baratheon", fb: "https://facebook.com/member44", img: "zera1.jpg" },
+      { name: "Myrcella Baratheon", fb: "https://facebook.com/member45", img: "zera1.jpg" },
+      { name: "Robert Arryn", fb: "https://facebook.com/member46", img: "zera1.jpg" },
+      { name: "Lysa Arryn", fb: "https://facebook.com/member47", img: "zera1.jpg" },
+      { name: "Walder Frey", fb: "https://facebook.com/member48", img: "zera1.jpg" },
+      { name: "Roose Bolton", fb: "https://facebook.com/member49", img: "zera1.jpg" },
+      { name: "Ramsay Bolton", fb: "https://facebook.com/member50", img: "zera1.jpg" }
+    ];
+
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let filteredMembers = [...members];
+
+    const memberList = document.getElementById("memberList");
+    const pageInfo = document.getElementById("pageInfo");
+
+    function renderMembers() {
+      memberList.innerHTML = "";
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageMembers = filteredMembers.slice(start, end);
+
+      pageMembers.forEach(m => {
+        const div = document.createElement("div");
+        div.className = "member";
+        div.innerHTML = `
+          <div class="member-left">
+            <img class="profile-img" src="${m.img}" alt="Profile" />
+            <div class="member-info">
+              <span class="member-name">${m.name}</span>
+              <span>${m.fb}</span>
+            </div>
+          </div>
+          <a class="facebook-link" href="${m.fb}" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" />
+          </a>
+        `;
+        memberList.appendChild(div);
+      });
+
+      const totalPages = Math.ceil(filteredMembers.length / itemsPerPage);
+      pageInfo.textContent = `หน้า ${currentPage} จาก ${totalPages || 1}`;
+
+      document.getElementById("prevBtn").disabled = currentPage === 1;
+      document.getElementById("nextBtn").disabled = currentPage === totalPages || totalPages === 0;
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderMembers();
+      }
+    }
+
+    function nextPage() {
+      const totalPages = Math.ceil(filteredMembers.length / itemsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderMembers();
+      }
+    }
+
+    function filterMembers() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      filteredMembers = members.filter(m => m.name.toLowerCase().includes(input));
+      currentPage = 1;
+      renderMembers();
+    }
+
+    renderMembers();
+  </script>
+</body>
+</html>
